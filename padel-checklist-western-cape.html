@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Western Cape Padel Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c1410; --bg2: #111c16; --bg3: #162019; --border: #1e3026;
+    --green: #4a9a5e; --green-light: #6dba82; --green-dim: #2d5a3a;
+    --text: #ddd8cc; --text-dim: #7a8a7a; --text-muted: #3a4e3a;
+    --indoor: #4FC3F7; --outdoor: #81C784; --both: #FFB74D; --gold: #c8a84a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; padding-bottom: 60px; }
+
+  header { background: linear-gradient(160deg,#132419 0%,#0c1a12 60%,#0a1510 100%); border-bottom: 1px solid var(--green-dim); padding: 40px 20px 32px; text-align: center; position: relative; overflow: hidden; }
+  header::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse 60% 60% at 15% 50%,rgba(74,154,94,.07) 0%,transparent 70%), radial-gradient(ellipse 40% 40% at 85% 20%,rgba(74,154,94,.05) 0%,transparent 60%); pointer-events:none; }
+  .eyebrow { font-size:11px; letter-spacing:.35em; text-transform:uppercase; color:var(--green); margin-bottom:10px; position:relative; }
+  header h1 { font-family:'Playfair Display',serif; font-size:clamp(26px,5vw,44px); font-weight:400; color:#f0ead8; letter-spacing:.03em; margin-bottom:6px; position:relative; }
+  header p { font-style:italic; color:var(--green); font-size:14px; margin-bottom:28px; font-family:'Playfair Display',serif; position:relative; }
+  .progress-wrap { max-width:420px; margin:0 auto; position:relative; z-index:1; }
+  .prog-labels { display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px; color:var(--text-dim); }
+  .prog-pct { color:var(--green-light); font-size:18px; font-weight:500; }
+  .prog-bg { background:#1a2e20; border-radius:99px; height:8px; overflow:hidden; }
+  .prog-fill { height:100%; background:linear-gradient(90deg,var(--green-dim),var(--green-light)); border-radius:99px; transition:width .4s ease; width:0%; }
+  .champ { margin-top:10px; color:var(--gold); font-size:14px; display:none; }
+
+  .controls { background:#0e1812; border-bottom:1px solid var(--border); padding:14px 16px; position:sticky; top:0; z-index:20; }
+  .search { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:10px 14px; font-size:14px; font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s; margin-bottom:10px; }
+  .search:focus { border-color:var(--green-dim); }
+  .search::placeholder { color:var(--text-muted); }
+  .frow { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+  .fbtn { padding:4px 13px; border-radius:99px; border:1px solid var(--border); background:transparent; color:var(--text-dim); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; transition:all .18s; white-space:nowrap; }
+  .fbtn:hover { border-color:var(--green-dim); color:var(--green); }
+  .fbtn.aAll,.fbtn.aregion { border-color:var(--green); background:rgba(74,154,94,.12); color:var(--green-light); }
+  .fbtn.aIndoor  { border-color:var(--indoor);  background:rgba(79,195,247,.1);  color:var(--indoor);  }
+  .fbtn.aOutdoor { border-color:var(--outdoor); background:rgba(129,199,132,.1); color:var(--outdoor); }
+  .fbtn.aBoth    { border-color:var(--both);    background:rgba(255,183,77,.1);  color:var(--both);    }
+
+  .rcount { padding:10px 18px 2px; font-size:12px; color:var(--text-muted); letter-spacing:.05em; }
+
+  .rgroup { padding:0 14px; margin-bottom:24px; }
+  .rheader { display:flex; justify-content:space-between; align-items:center; padding:10px 2px 8px; border-bottom:1px solid var(--border); margin-bottom:10px; }
+  .rtitle { font-size:11px; letter-spacing:.25em; text-transform:uppercase; color:var(--green); font-weight:500; }
+  .rcount2 { font-size:11px; color:var(--text-muted); }
+
+  .card { display:flex; align-items:center; gap:13px; padding:13px 14px; background:var(--bg2); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:all .18s; margin-bottom:7px; user-select:none; -webkit-tap-highlight-color:transparent; animation:fadeIn .2s ease both; }
+  .card:hover { border-color:var(--green-dim); background:#141e18; }
+  .card.v { background:#0d1e14; border-color:#2a5038; }
+  .chkbox { width:22px; height:22px; border-radius:6px; border:2px solid var(--border); background:transparent; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .18s; font-size:13px; color:#fff; }
+  .card.v .chkbox { background:var(--green-dim); border-color:var(--green); }
+  .cinfo { flex:1; min-width:0; }
+  .cname { font-size:14px; color:#c8c0b0; margin-bottom:3px; font-family:'Playfair Display',serif; font-weight:400; line-height:1.3; transition:color .18s; }
+  .card.v .cname { text-decoration:line-through; text-decoration-color:#3a6a4a; color:#5a8a6a; }
+  .carea { font-size:11px; color:var(--text-muted); }
+  .cbadges { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+  .tbadge { font-size:10px; padding:2px 8px; border-radius:99px; border:1px solid; white-space:nowrap; }
+  .tIndoor  { color:var(--indoor);  border-color:rgba(79,195,247,.3);  background:rgba(79,195,247,.08);  }
+  .tOutdoor { color:var(--outdoor); border-color:rgba(129,199,132,.3); background:rgba(129,199,132,.08); }
+  .tBoth    { color:var(--both);    border-color:rgba(255,183,77,.3);  background:rgba(255,183,77,.08);  }
+  .clabel { font-size:10px; color:var(--text-muted); }
+
+  footer { text-align:center; padding:30px 20px 0; font-size:11px; color:var(--text-muted); border-top:1px solid var(--border); margin-top:16px; letter-spacing:.05em; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Western Cape · South Africa</div>
+  <h1>🎾 Padel Club Checklist</h1>
+  <p>Track every court across the Cape</p>
+  <div class="progress-wrap">
+    <div class="prog-labels"><span id="vlabel">0 of 0 visited</span><span class="prog-pct" id="pct">0%</span></div>
+    <div class="prog-bg"><div class="prog-fill" id="fill"></div></div>
+    <div class="champ" id="champ">🏆 Padel Champion of the Western Cape!</div>
+  </div>
+</header>
+
+<div class="controls">
+  <input class="search" type="text" id="srch" placeholder="Search clubs or areas…">
+  <div class="frow" id="tfilters">
+    <button class="fbtn aAll" data-t="All">All Types</button>
+    <button class="fbtn" data-t="Indoor">🏠 Indoor</button>
+    <button class="fbtn" data-t="Outdoor">☀️ Outdoor</button>
+    <button class="fbtn" data-t="Both">🔄 Both</button>
+  </div>
+  <div class="frow" id="rfilters"></div>
+</div>
+
+<div class="rcount" id="rc"></div>
+<div id="list"></div>
+<footer>Tap any club to mark as visited · Progress auto-saves in your browser · Updated April 2026</footer>
+
+<script>
+const clubs=[
+  // CAPE TOWN CITY
+  {id:1, name:"Racket + Ball Club",                  area:"Bree Street, City Bowl",                  region:"Cape Town City",       courts:4,    type:"Indoor"},
+  {id:2, name:"The Grid Padel",                      area:"Three Anchor Bay, Green Point",            region:"Cape Town City",       courts:null, type:"Outdoor"},
+  {id:3, name:"Point Padel – Virgin Active",         area:"Green Point",                              region:"Cape Town City",       courts:4,    type:"Outdoor"},
+  {id:4, name:"Africa Padel V&A Waterfront",         area:"V&A Waterfront",                           region:"Cape Town City",       courts:5,    type:"Outdoor"},
+  {id:5, name:"Mount Nelson Hotel Padel",            area:"Gardens, City Bowl",                       region:"Cape Town City",       courts:1,    type:"Outdoor"},
+  {id:6, name:"Oh Padel",                            area:"Cape Town",                                region:"Cape Town City",       courts:null, type:"Outdoor"},
+  // ATLANTIC SEABOARD
+  {id:7, name:"Africa Padel Camps Bay",              area:"The Bay Hotel / The Rotunda, Camps Bay",   region:"Atlantic Seaboard",    courts:5,    type:"Both"},
+  {id:8, name:"Camps Bay Retreat Padel",             area:"Camps Bay",                                region:"Atlantic Seaboard",    courts:1,    type:"Outdoor"},
+  {id:9, name:"The Glen Virgin Active Padel",        area:"Glen Country Club, Clifton",               region:"Atlantic Seaboard",    courts:3,    type:"Outdoor"},
+  // INNER CITY FRINGE
+  {id:10,name:"Arturf Padel Arena",                  area:"Paarden Eiland",                           region:"Inner City Fringe",    courts:6,    type:"Both"},
+  {id:11,name:"EPICENTRE Virgin Active Padel",       area:"Paarden Eiland",                           region:"Inner City Fringe",    courts:5,    type:"Indoor"},
+  {id:12,name:"Aura Padel Club",                     area:"Montague Gardens",                         region:"Inner City Fringe",    courts:5,    type:"Indoor"},
+  {id:13,name:"Aura Padel Club Woodstock",           area:"Newmarket Street, Woodstock",              region:"Inner City Fringe",    courts:null, type:"Indoor"},
+  {id:14,name:"Woodstock Virgin Active Padel",       area:"Albert Road, Woodstock",                   region:"Inner City Fringe",    courts:null, type:"Outdoor"},
+  {id:15,name:"City Club Padel",                     area:"Albert Road, Woodstock",                   region:"Inner City Fringe",    courts:null, type:"Indoor"},
+  {id:16,name:"Serpents Padel @ Arena X",            area:"Racecourse Road, Milnerton",               region:"Inner City Fringe",    courts:null, type:"Outdoor"},
+  // NORTHERN SUBURBS
+  {id:17,name:"Action Padel",                        area:"Century City / Canal Walk",                region:"Northern Suburbs",     courts:2,    type:"Outdoor"},
+  {id:18,name:"Padel 365 Century City",              area:"Slipstream Way, Century City",             region:"Northern Suburbs",     courts:null, type:"Outdoor"},
+  {id:19,name:"Atlantic Padel @ Table View",         area:"Table View",                               region:"Northern Suburbs",     courts:2,    type:"Outdoor"},
+  {id:20,name:"Atlantic Padel @ Sunningdale",        area:"Sunningdale, Milnerton",                   region:"Northern Suburbs",     courts:4,    type:"Outdoor"},
+  {id:21,name:"Atlantic Padel @ Parklands",          area:"Rivergate, Parklands",                     region:"Northern Suburbs",     courts:null, type:"Outdoor"},
+  {id:22,name:"Atlantic Padel @ Atlantic Beach",     area:"Atlantic Beach Estate, Melkbosstrand",     region:"Northern Suburbs",     courts:null, type:"Outdoor"},
+  {id:23,name:"Melkbos Padel @ Koeberg Club",        area:"Merchant Walk, Melkbosstrand",             region:"Northern Suburbs",     courts:null, type:"Outdoor"},
+  {id:24,name:"Lekka Padel @ Milnerton",             area:"Jansen Road, Milnerton",                   region:"Northern Suburbs",     courts:2,    type:"Outdoor"},
+  {id:25,name:"Padel 365 Richmond Park",             area:"Montague Gardens",                         region:"Northern Suburbs",     courts:5,    type:"Outdoor"},
+  {id:26,name:"Eden Padel",                          area:"Atlantic Hills, Durbanville",               region:"Northern Suburbs",     courts:4,    type:"Indoor"},
+  {id:27,name:"Durbanville Virgin Active Padel",     area:"Pinehurst, Durbanville",                   region:"Northern Suburbs",     courts:3,    type:"Outdoor"},
+  {id:28,name:"Padel Now – Meerendal",               area:"Vissershok Road, Durbanville",              region:"Northern Suburbs",     courts:null, type:"Outdoor"},
+  {id:29,name:"Bandeja Padel @ Eversdal",            area:"Eversdal Sports Club, Durbanville",        region:"Northern Suburbs",     courts:null, type:"Outdoor"},
+  // SOUTHERN SUBURBS
+  {id:30,name:"Africa Padel Claremont",              area:"Herschel Close, Claremont",                region:"Southern Suburbs",     courts:9,    type:"Outdoor"},
+  {id:31,name:"Lifestyle Padel Claremont",           area:"Stadium-on-Main, Claremont",               region:"Southern Suburbs",     courts:2,    type:"Indoor"},
+  {id:32,name:"Arturf Villagers Academy",            area:"Queen Victoria Road, Claremont",           region:"Southern Suburbs",     courts:null, type:"Indoor"},
+  {id:33,name:"Kelvin Grove (Padel 365)",            area:"Campground Road, Newlands",                region:"Southern Suburbs",     courts:3,    type:"Outdoor"},
+  {id:34,name:"Padel 365 @ WPCC",                   area:"Avenue De Mist, Rondebosch",               region:"Southern Suburbs",     courts:null, type:"Outdoor"},
+  {id:35,name:"Padel Life – Pinelands",             area:"Old Mutual Sports Club, Pinelands",        region:"Southern Suburbs",     courts:null, type:"Outdoor"},
+  {id:36,name:"GameOn Sports",                       area:"Turfhall Estate, Kenilworth",              region:"Southern Suburbs",     courts:null, type:"Outdoor"},
+  {id:37,name:"Bay Padel",                           area:"South Palms Centre, Retreat / Tokai",      region:"Southern Suburbs",     courts:6,    type:"Indoor"},
+  {id:38,name:"Enigma Padel",                        area:"Brigid Road, Elfindale, Diep River",       region:"Southern Suburbs",     courts:null, type:"Outdoor"},
+  {id:39,name:"Lanspadel & Events",                  area:"Induland Crescent, Lansdowne",             region:"Southern Suburbs",     courts:null, type:"Outdoor"},
+  {id:40,name:"Padel Story",                         area:"Oakdale Club, Bellville",                  region:"Southern Suburbs",     courts:null, type:"Outdoor"},
+  {id:41,name:"Welgemoed Padel",                     area:"Jip De Jager Drive, Welgemoed",            region:"Southern Suburbs",     courts:1,    type:"Outdoor"},
+  {id:42,name:"Broadlands Padel",                    area:"Van Der Westhuizen Drive, Helderberg",     region:"Southern Suburbs",     courts:null, type:"Outdoor"},
+  // DEEP SOUTH
+  {id:43,name:"Padel 365 @ Noordhoek Emporium",      area:"Noordhoek",                                region:"Deep South",           courts:4,    type:"Outdoor"},
+  {id:44,name:"Padel@5",                             area:"Hout Bay",                                 region:"Deep South",           courts:1,    type:"Outdoor"},
+  {id:45,name:"Volea Padel Centre",                  area:"Imhoff Farm, Kommetjie",                   region:"Deep South",           courts:2,    type:"Outdoor"},
+  // STELLENBOSCH
+  {id:46,name:"Club Padel Stellenbosch",             area:"Stellenbosch",                             region:"Stellenbosch",         courts:5,    type:"Both"},
+  {id:47,name:"Africa Padel Van Der Stel",           area:"Du Toit Street, Stellenbosch",             region:"Stellenbosch",         courts:4,    type:"Outdoor"},
+  {id:48,name:"Anura Racquet Club",                  area:"Anura Vineyards, Stellenbosch",            region:"Stellenbosch",         courts:null, type:"Outdoor"},
+  {id:49,name:"De Zalze Golf Estate Padel",          area:"De Zalze, Stellenbosch",                   region:"Stellenbosch",         courts:2,    type:"Outdoor"},
+  {id:50,name:"Zorgvliet Wine Estate Padel",         area:"Helshoogte Road, Stellenbosch",            region:"Stellenbosch",         courts:null, type:"Outdoor"},
+  {id:51,name:"Hazendal Wine Estate Padel",          area:"Hazendal, Stellenbosch",                   region:"Stellenbosch",         courts:1,    type:"Outdoor"},
+  {id:52,name:"PadelX – Devonbosch",                area:"Devonbosch, Bottelary Road, Stellenbosch", region:"Stellenbosch",         courts:null, type:"Outdoor"},
+  {id:53,name:"Avontuur Padel Club",                 area:"Avontuur Estate, Stellenbosch",            region:"Stellenbosch",         courts:null, type:"Outdoor"},
+  // FRANSCHHOEK & SURROUNDS
+  {id:54,name:"Rickety Bridge Padel & Social Club",  area:"Rickety Bridge Wine Estate, Franschhoek",  region:"Franschhoek",          courts:null, type:"Outdoor"},
+  {id:55,name:"Fransvliet Estate Padel",             area:"Fransvliet Estate, Franschhoek",           region:"Franschhoek",          courts:1,    type:"Outdoor"},
+  {id:56,name:"Inwine Padel",                        area:"Klapmuts (near Franschhoek)",              region:"Franschhoek",          courts:null, type:"Outdoor"},
+  // PAARL & WELLINGTON
+  {id:57,name:"Val de Vie Estate Padel",             area:"Val de Vie, Paarl",                        region:"Paarl & Wellington",   courts:null, type:"Outdoor"},
+  {id:58,name:"Padel Ace",                           area:"Paarl",                                    region:"Paarl & Wellington",   courts:2,    type:"Outdoor"},
+  {id:59,name:"iDig Padel Boschenmeer",              area:"Boschenmeer Golf Estate, Paarl",           region:"Paarl & Wellington",   courts:null, type:"Outdoor"},
+  {id:60,name:"Dragon Padel",                        area:"Wellington",                               region:"Paarl & Wellington",   courts:null, type:"Outdoor"},
+  // SOMERSET WEST
+  {id:61,name:"The Padel Hub – Lourensford",         area:"Lourensford Wine Estate, Somerset West",   region:"Somerset West",        courts:null, type:"Outdoor"},
+  {id:62,name:"Virgin Active Padel – Lourensford",   area:"Lourensford, Somerset West",               region:"Somerset West",        courts:2,    type:"Outdoor"},
+  // WEST COAST
+  {id:63,name:"Langebaan Country Estate Padel",      area:"Langebaan Country Estate",                 region:"West Coast",           courts:2,    type:"Outdoor"},
+  {id:64,name:"Club Mykonos Padel",                  area:"Club Mykonos, Langebaan",                  region:"West Coast",           courts:null, type:"Outdoor"},
+  // GREATER WESTERN CAPE
+  {id:65,name:"Techno Padel @ Houw Hoek Hotel",      area:"Grabouw",                                  region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+  {id:66,name:"Play Padel",                          area:"Hermanus Sports Club, Hermanus",           region:"Greater Western Cape", courts:4,    type:"Outdoor"},
+  {id:67,name:"The Gym Padel",                       area:"Worcester",                                region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+  {id:68,name:"Africa Padel Plettenberg Bay",        area:"Plettenberg Bay",                          region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+  {id:69,name:"Padel 365 @ Plett Country Club",      area:"Plettenberg Bay",                          region:"Greater Western Cape", courts:3,    type:"Outdoor"},
+  {id:70,name:"Forest Gate Padel",                   area:"Plettenberg Bay",                          region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+  {id:71,name:"Liv Padel",                           area:"Knysna",                                   region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+  {id:72,name:"Simola Padel",                        area:"Simola, Knysna",                           region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+  {id:73,name:"Garden Route Padel",                  area:"Glenwood, George",                         region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+  {id:74,name:"Lets Play Padel",                     area:"George",                                   region:"Greater Western Cape", courts:3,    type:"Outdoor"},
+  {id:75,name:"Telesto Tennis Academy Padel",        area:"George",                                   region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+  {id:76,name:"Mossel Bay Padel",                    area:"Mossel Bay",                               region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+  {id:77,name:"Point Padel Mossel Bay",              area:"Mossel Bay",                               region:"Greater Western Cape", courts:2,    type:"Outdoor"},
+];
+
+const REGIONS=["All","Cape Town City","Atlantic Seaboard","Inner City Fringe","Northern Suburbs","Southern Suburbs","Deep South","Stellenbosch","Franschhoek","Paarl & Wellington","Somerset West","West Coast","Greater Western Cape"];
+const ICON={Indoor:"🏠",Outdoor:"☀️",Both:"🔄"};
+
+let visited={};
+try{visited=JSON.parse(localStorage.getItem('padelV3')||'{}');}catch(e){}
+let aR="All",aT="All";
+
+// Region buttons
+const rf=document.getElementById('rfilters');
+REGIONS.forEach(r=>{
+  const b=document.createElement('button');
+  b.className='fbtn'+(r==='All'?' aregion':'');
+  b.textContent=r; b.dataset.r=r;
+  b.onclick=()=>{ aR=r; rf.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('aregion')); b.classList.add('aregion'); render(); };
+  rf.appendChild(b);
+});
+
+// Type buttons
+document.getElementById('tfilters').onclick=e=>{
+  const b=e.target.closest('[data-t]'); if(!b) return;
+  aT=b.dataset.t;
+  document.querySelectorAll('#tfilters .fbtn').forEach(x=>x.className='fbtn');
+  b.classList.add('a'+aT);
+  render();
+};
+
+document.getElementById('srch').oninput=render;
+
+function render(){
+  const s=document.getElementById('srch').value.toLowerCase();
+  const filt=clubs.filter(c=>{
+    const rOk=aR==='All'||c.region===aR;
+    const tOk=aT==='All'||c.type===aT||(aT!=='Both'&&c.type==='Both');
+    const sOk=!s||c.name.toLowerCase().includes(s)||c.area.toLowerCase().includes(s)||c.region.toLowerCase().includes(s);
+    return rOk&&tOk&&sOk;
+  });
+  document.getElementById('rc').textContent=`Showing ${filt.length} of ${clubs.length} clubs`;
+  const container=document.getElementById('list');
+  container.innerHTML='';
+  const grouped={};
+  filt.forEach(c=>{if(!grouped[c.region])grouped[c.region]=[];grouped[c.region].push(c);});
+  Object.entries(grouped).forEach(([reg,list])=>{
+    const rv=list.filter(c=>visited[c.id]).length;
+    const g=document.createElement('div'); g.className='rgroup';
+    g.innerHTML=`<div class="rheader"><span class="rtitle">${reg}</span><span class="rcount2">${rv}/${list.length}</span></div>`;
+    list.forEach((c,i)=>{
+      const v=!!visited[c.id];
+      const d=document.createElement('div');
+      d.className='card'+(v?' v':'');
+      d.style.animationDelay=(i*.025)+'s';
+      d.innerHTML=`<div class="chkbox">${v?'✓':''}</div><div class="cinfo"><div class="cname">${c.name}</div><div class="carea">📍 ${c.area}</div></div><div class="cbadges"><span class="tbadge t${c.type}">${ICON[c.type]} ${c.type}</span>${c.courts?`<span class="clabel">${c.courts} court${c.courts>1?'s':''}</span>`:''}</div>`;
+      d.onclick=()=>{visited[c.id]=!visited[c.id];try{localStorage.setItem('padelV3',JSON.stringify(visited));}catch(e){}render();};
+      g.appendChild(d);
+    });
+    container.appendChild(g);
+  });
+  updateProg();
+}
+
+function updateProg(){
+  const total=clubs.length, count=Object.values(visited).filter(Boolean).length, pct=Math.round(count/total*100);
+  document.getElementById('vlabel').textContent=`${count} of ${total} clubs visited`;
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('fill').style.width=pct+'%';
+  document.getElementById('champ').style.display=count===total?'block':'none';
+}
+
+render();
+</script>
+</body>
+</html>

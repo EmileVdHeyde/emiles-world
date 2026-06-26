@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emile's World</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #8B5CF6;
+    --purple-dim: #6D28D9;
+    --black: #0a0a0a;
+    --off-black: #111111;
+    --card-bg: #161616;
+    --border: #2a2a2a;
+    --text: #f0ede8;
+    --text-muted: #888;
+    --purple-mid: #7C3AED;
+    --purple-light: #A78BFA;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 4rem 4rem 6rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 2rem;
+  }
+
+  .hero-title {
+    font-size: clamp(3.5rem, 6vw, 7rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 2rem;
+  }
+
+  .hero-title .accent { color: var(--purple); }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 360px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  .hero-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  /* HERO RIGHT — photo + map zone */
+  .hero-right {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+
+  .hero-photo-placeholder {
+    width: 340px;
+    height: 460px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-photo-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    position: absolute;
+    inset: 0;
+    display: none;
+  }
+
+  .photo-icon {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .purple-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--purple);
+  }
+
+  /* large decorative number */
+  .hero-number {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 9rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 6rem;
+  }
+
+  /* WORLD MAP SECTION */
+  .map-section {
+    padding: 6rem;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 80px;
+  }
+
+  .map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2.5rem;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 3vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .map-frame {
+    width: 100%;
+    height: 400px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* SVG world map dots */
+  .map-frame svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .map-pin {
+    fill: var(--purple);
+    filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.8));
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; r: 5; }
+    50% { opacity: 0.6; r: 7; }
+  }
+
+  /* SECTION GRID */
+  .sections-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+  }
+
+  .section-card {
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+
+  .section-card:hover {
+    background: var(--card-bg);
+  }
+
+  .section-card:hover .card-arrow {
+    transform: translate(4px, -4px);
+    color: var(--purple);
+  }
+
+  .card-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    line-height: 1;
+  }
+
+  .card-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .card-arrow {
+    font-size: 1.5rem;
+    color: var(--border);
+    transition: transform 0.2s, color 0.2s;
+    display: inline-block;
+  }
+
+  .card-accent-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--purple);
+    transition: height 0.3s ease;
+  }
+
+  .section-card:hover .card-accent-line {
+    height: 100%;
+  }
+
+  /* padel card accent green */
+  .card-padel .card-accent-line { background: var(--purple-light); }
+  .card-padel:hover .card-title { color: var(--purple-light); }
+
+  /* karaoke card */
+  .card-karaoke .card-accent-line { background: #8B5CF6; }
+  .card-karaoke:hover .card-title { color: #8B5CF6; }
+
+  /* data card */
+  .card-data .card-accent-line { background: #A78BFA; }
+  .card-data:hover .card-title { color: #A78BFA; }
+
+  .card-world:hover .card-title { color: var(--purple); }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem 6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+
+  .footer-logo span { color: var(--purple); }
+
+  .footer-right {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 5rem 2rem 3rem; }
+    .hero-right { display: none; }
+    .divider, .map-section, footer { padding-left: 2rem; padding-right: 2rem; }
+    .map-section { padding-top: 3rem; padding-bottom: 3rem; }
+    .sections-grid { grid-template-columns: 1fr 1fr; }
+    .section-card { padding: 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .hero-number { display: none; }
+  }
+
+  @media (max-width: 560px) {
+    .sections-grid { grid-template-columns: 1fr; }
+    .hero-left { padding: 4rem 1.5rem 2rem; }
+    .divider, .map-section, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="eyebrow">Cape Town, South Africa</p>
+    <h1 class="hero-title">
+      Emile's<br><span class="accent">World</span>
+    </h1>
+    <p class="hero-subtitle">
+      Padel courts, data pipelines, late-night karaoke, and maps of everywhere else — welcome to the hub.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">Padel</span>
+      <span class="tag">Data</span>
+      <span class="tag">Karaoke</span>
+      <span class="tag">Explorer</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-number">EW</div>
+    <div class="hero-photo-placeholder" id="photoBox">
+      <div class="photo-icon">📸</div>
+      <span>Drop your photo here<br>or replace src in HTML</span>
+      <img id="heroImg" src="" alt="Emile">
+      <div class="purple-bar"></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WORLD MAP -->
+<section class="map-section">
+  <p class="section-label">Coordinates</p>
+  <div class="map-header">
+    <h2 class="section-title">On the map</h2>
+    <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text-muted)">33.9249° S, 18.4241° E</span>
+  </div>
+  <div class="map-frame">
+    <!-- Simplified SVG world map with Cape Town pin -->
+    <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <!-- Ocean background -->
+      <rect width="1000" height="500" fill="#0e0e0e"/>
+      <!-- Grid lines -->
+      <g stroke="#1e1e1e" stroke-width="0.5">
+        <line x1="0" y1="125" x2="1000" y2="125"/>
+        <line x1="0" y1="250" x2="1000" y2="250"/>
+        <line x1="0" y1="375" x2="1000" y2="375"/>
+        <line x1="250" y1="0" x2="250" y2="500"/>
+        <line x1="500" y1="0" x2="500" y2="500"/>
+        <line x1="750" y1="0" x2="750" y2="500"/>
+      </g>
+      <!-- Simplified landmasses (stylised dot-grid continents) -->
+      <!-- North America -->
+      <g fill="#222">
+        <rect x="80" y="60" width="160" height="160" rx="20"/>
+        <rect x="90" y="200" width="80" height="60" rx="10"/>
+      </g>
+      <!-- South America -->
+      <g fill="#1e1e1e">
+        <rect x="180" y="240" width="90" height="140" rx="20"/>
+      </g>
+      <!-- Europe -->
+      <g fill="#222">
+        <rect x="440" y="55" width="90" height="80" rx="12"/>
+      </g>
+      <!-- Africa -->
+      <g fill="#1e1e1e">
+        <rect x="450" y="150" width="100" height="180" rx="18"/>
+        <rect x="460" y="310" width="70" height="60" rx="20"/>
+      </g>
+      <!-- Asia -->
+      <g fill="#222">
+        <rect x="550" y="40" width="240" height="160" rx="18"/>
+        <rect x="620" y="190" width="100" height="80" rx="12"/>
+      </g>
+      <!-- Australia -->
+      <g fill="#1e1e1e">
+        <rect x="730" y="290" width="100" height="80" rx="16"/>
+      </g>
+
+      <!-- Equator line -->
+      <line x1="0" y1="250" x2="1000" y2="250" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="6,6"/>
+
+      <!-- Cape Town pin (approx position) -->
+      <g transform="translate(487, 345)">
+        <circle class="map-pin" cx="0" cy="0" r="5"/>
+        <circle cx="0" cy="0" r="12" fill="none" stroke="#8B5CF6" stroke-width="1" opacity="0.4"/>
+        <circle cx="0" cy="0" r="20" fill="none" stroke="#8B5CF6" stroke-width="0.5" opacity="0.2"/>
+      </g>
+      <!-- Label -->
+      <text x="505" y="342" font-family="Space Mono,monospace" font-size="9" fill="#8B5CF6" letter-spacing="1">CAPE TOWN</text>
+
+      <!-- Other cool pins (visited / notable) -->
+      <!-- Europe -->
+      <circle cx="480" cy="95" r="3" fill="#7C3AED" opacity="0.7"/>
+      <!-- South-East Asia -->
+      <circle cx="720" cy="230" r="3" fill="#7C3AED" opacity="0.7"/>
+      <!-- East Africa -->
+      <circle cx="520" cy="260" r="3" fill="#7C3AED" opacity="0.5"/>
+    </svg>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION CARDS -->
+<div class="sections-grid">
+
+  <!-- PADEL -->
+  <a href="#" class="section-card card-padel" onclick="return false;" title="Coming soon">
+    <div class="card-accent-line"></div>
+    <p class="card-number">01</p>
+    <span class="card-icon">🎾</span>
+    <h3 class="card-title">Padel</h3>
+    <p class="card-desc">Club maps, technique breakdowns, Premier Padel race rankings, and Western Cape court guides.</p>
+    <span class="card-arrow">↗</span>
+  </a>
+
+  <!-- KARAOKE -->
+  <a href="#" class="section-card card-karaoke" onclick="return false;" title="Coming soon">
+    <div class="card-accent-line"></div>
+    <p class="card-number">02</p>
+    <span class="card-icon">🎤</span>
+    <h3 class="card-title">Karaoke</h3>
+    <p class="card-desc">Song picks, setlists, and the occasional terrible high note — documented for posterity.</p>
+    <span class="card-arrow">↗</span>
+  </a>
+
+  <!-- DATA -->
+  <a href="#" class="section-card card-data" onclick="return false;" title="Coming soon">
+    <div class="card-accent-line"></div>
+    <p class="card-number">03</p>
+    <span class="card-icon">📊</span>
+    <h3 class="card-title">Data</h3>
+    <p class="card-desc">Payments analytics, dbt models, AI-powered dashboards, and the intelligence layer behind the numbers.</p>
+    <span class="card-arrow">↗</span>
+  </a>
+
+  <!-- WORLD / TRAVEL -->
+  <a href="#" class="section-card card-world" onclick="return false;" title="Coming soon">
+    <div class="card-accent-line"></div>
+    <p class="card-number">04</p>
+    <span class="card-icon">🌍</span>
+    <h3 class="card-title">World</h3>
+    <p class="card-desc">Places visited, places planned, and the restless urge to keep adding pins to the map.</p>
+    <span class="card-arrow">↗</span>
+  </a>
+
+  <!-- SLOW WINS (bonus — the brand) -->
+  <a href="https://slowwinshealth.com" class="section-card" style="border-right:1px solid var(--border)" target="_blank" rel="noopener">
+    <div class="card-accent-line" style="background:var(--purple)"></div>
+    <p class="card-number">05</p>
+    <span class="card-icon">🔥</span>
+    <h3 class="card-title" style="color:var(--purple)">Slow Wins</h3>
+    <p class="card-desc">The health and fitness brand — sustainable recomposition, Block Fuel app, and the book.</p>
+    <span class="card-arrow">↗</span>
+  </a>
+
+  <!-- PLACEHOLDER SIXTH CARD -->
+  <div class="section-card" style="opacity:0.3;cursor:default">
+    <div class="card-accent-line"></div>
+    <p class="card-number">··</p>
+    <span class="card-icon" style="filter:grayscale(1)">＋</span>
+    <h3 class="card-title">More coming</h3>
+    <p class="card-desc">New sections drop as the world expands.</p>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">EW<span> ·</span> Emile's World</div>
+  <div class="footer-right">Cape Town · 2025</div>
+</footer>
+
+<script>
+  // Photo drop-zone: click the placeholder to upload a photo
+  const photoBox = document.getElementById('photoBox');
+  const heroImg = document.getElementById('heroImg');
+
+  photoBox.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        heroImg.src = ev.target.result;
+        heroImg.style.display = 'block';
+        photoBox.querySelector('.photo-icon').style.display = 'none';
+        photoBox.querySelector('span').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  });
+
+  photoBox.addEventListener('dragover', e => { e.preventDefault(); photoBox.style.borderColor = '#8B5CF6'; });
+  photoBox.addEventListener('dragleave', () => { photoBox.style.borderColor = ''; });
+  photoBox.addEventListener('drop', e => {
+    e.preventDefault();
+    photoBox.style.borderColor = '';
+    const file = e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      heroImg.src = ev.target.result;
+      heroImg.style.display = 'block';
+      photoBox.querySelector('.photo-icon').style.display = 'none';
+      photoBox.querySelector('span').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+</script>
+</body>
+</html>
